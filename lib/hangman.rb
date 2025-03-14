@@ -41,16 +41,22 @@ class InputComparison
   end
 
   def player_input
-    ask_input
-    begin
-    answer = gets.chomp unless valid_input?(answer)
-    rescue => e
-      puts e
+    loop do
+      ask_input
+      answer = gets.chomp
+      valid_input?(answer)
+      break
+    rescue InvalidInputError
+      puts 'Invalid input, try again.'
+    end
   end
 
   def valid_input?(input)
-    raise 'Invalid input' unless input.match?(/[a-zA-Z]/)
+    raise InvalidInputError unless input.match?(/[a-zA-Z]/)
   end
+end
+
+class InvalidInputError < StandardError
 end
 
 PlayGame.intro
