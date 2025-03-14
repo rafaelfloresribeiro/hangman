@@ -34,4 +34,25 @@ class PlayGame
   end
 end
 
+# class to handle all input comparisons
+class InputComparison
+  def ask_input
+    puts 'type a character'
+  end
+
+  def player_input
+    ask_input
+    begin
+    answer = gets.chomp unless valid_input?(answer)
+    rescue => e
+      puts e
+  end
+
+  def valid_input?(input)
+    raise 'Invalid input' unless input.match?(/[a-zA-Z]/)
+  end
+end
+
 PlayGame.intro
+a = InputComparison.new
+a.player_input
