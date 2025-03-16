@@ -45,20 +45,24 @@ class InputComparison
       ask_input
       answer = gets.chomp
       valid_input?(answer)
-      break
+      break answer
     rescue InvalidInputError
       puts 'Invalid input, try again.'
     end
   end
 
   def valid_input?(input)
-    raise InvalidInputError unless input.match?(/[a-zA-Z]/)
+    raise InvalidInputError unless input.match?(/[a-zA-Z]/) && input.length == 1
   end
 end
 
 class InvalidInputError < StandardError
 end
 
-PlayGame.intro
-a = InputComparison.new
-a.player_input
+# Class to operate all the game's logic
+class Game
+  def compare_input(word, letter)
+    word.chars.map { |game_word| game_word == letter ? letter : nil }
+  end
+end
+
