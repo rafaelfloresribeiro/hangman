@@ -13,7 +13,7 @@ o metodo .sample deve bastar. (X)
 5. Desenvolver uma forma de comparar as suposicoes. Case insensitive. (X)
 6. Desenvolver uma forma de manter o placar. (X)
 7. Desenvolver a classe responsavel por jogar o jogo, mostrar o progresso do jogo, o local das palavras e o tamanho
-representado por _.
+representado por _. ( )
 8. Desenvolver forma de salvar o progresso do jogo.
 
 Onde estamos: 7.
@@ -21,8 +21,8 @@ Onde estamos: 7.
 
 
 7. 
-  a)Apresente a introducao pro jogo
-  b)Gere uma palavra. Nesse periodo de construcao, imprima a palavra no console pra facilitar a vida desde ja.
+  a)Apresente a introducao pro jogo (X)
+  b)Gere uma palavra. Nesse periodo de construcao, imprima a palavra no console pra facilitar a vida desde ja. (X)
   c)Imprima tambem o tamanho da palavra com os _
   d)Peca pelo input, compare com a palavra e apresente o resultado ou apresente a vida diminuida
   e)Repita ate a vida chegar ate 0
