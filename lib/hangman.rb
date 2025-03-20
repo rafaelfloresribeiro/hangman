@@ -31,14 +31,20 @@ end
 
 # class to handle all comparisons
 class Comparison
+  attr_accessor :value
+
+  def initialize(value)
+    @value = value
+  end
+
   def words_generator
     dictionary = File.open('../files/google-10000-english-no-swears.txt')
     word_map = dictionary.readlines.map { |word| word.chomp if word.chomp.length >= 4 && word.chomp.length <= 11 }
-    word_map.compact.sample
+    Comparison.new(word_map.compact.sample)
   end
 
   def self.hide_string(string)
-    string.chars.map { '_ ' }.join
+    string.value.chars.map { '_ ' }.join
   end
 
   def ask_input
@@ -50,7 +56,7 @@ class Comparison
       puts ask_input
       answer = gets.chomp
       valid_input?(answer)
-      break answer
+      break Comparison.new(answer)
     rescue InvalidInputError
       puts 'Invalid input, try again.'
     end
@@ -60,8 +66,8 @@ class Comparison
     raise InvalidInputError unless input.match?(/[a-zA-Z]/) && input.length == 1
   end
 
-  def compare_input(word, letter)
-    word.chars.map { |game_word| game_word == letter ? letter : false }
+  def compare_input(letter)
+    @word.value.chars.map { |game_word| game_word == letter ? letter : false }
   end
 
   def compare_score(score)
@@ -89,19 +95,20 @@ end
 # Class to operate all the game's logic
 class Hangman
   def initialize
-    @word = Comparison.new
+    @word = Comparison.new('')
     @score = Score.new
-    @guess = Comparison.new
+    @guess = Comparison.new('')
   end
 
   def game_start
     puts PlayGame.intro
     @word = @word.words_generator
-    puts "#{@word} is the word"
+    puts "#{@word.value} is the word"
     puts Comparison.hide_string(@word)
     loop do
       @guess = @guess.player_input
-      @guess.compare_input(@word, @guess)
+      binding.pry
+      @word.compare_input(@guess.value)
     end
   end
 end
