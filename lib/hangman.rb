@@ -66,8 +66,8 @@ class Comparison
     raise InvalidInputError unless input.match?(/[a-zA-Z]/) && input.length == 1
   end
 
-  def compare_input(letter)
-    @word.value.chars.map { |game_word| game_word == letter ? letter : false }
+  def compare_input(letter, word)
+    word.chars.map { |game_word| game_word == letter ? letter : false }
   end
 
   def compare_score(score)
@@ -107,8 +107,8 @@ class Hangman
     puts Comparison.hide_string(@word)
     loop do
       @guess = @guess.player_input
+      result = @guess.compare_input(@guess.value, @word.value)
       binding.pry
-      @word.compare_input(@guess.value)
     end
   end
 end
