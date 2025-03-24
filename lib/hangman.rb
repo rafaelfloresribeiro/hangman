@@ -73,6 +73,10 @@ class Comparison
   def compare_score(score)
     score.include?(false)
   end
+
+  def self.p_current_word(user_guess)
+    user_guess.map { |letters| letters == false ? '_ ' : letters }.join
+  end
 end
 
 # Class to keep and maintain score
@@ -85,7 +89,7 @@ class Score
 
   def wrong_answer
     @score -= 1
-    'Game over' if @score.zero?
+    @score = 'Game over' if @score.zero?
   end
 end
 
@@ -109,6 +113,14 @@ class Hangman
       @guess = @guess.player_input
       result = @guess.compare_input(@guess.value, @word.value)
       binding.pry
+      puts Comparison.p_current_word(result)
+      if result.any?
+        p 'vida permanece'
+      else
+        @score.wrong_answer
+        p '-1 de vida'
+        p @score.score
+      end
     end
   end
 end
