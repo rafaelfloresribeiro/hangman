@@ -77,6 +77,15 @@ class Comparison
   def self.p_current_word(user_guess)
     user_guess.map { |letters| letters == false ? '_ ' : letters }.join
   end
+
+  def self.concat_word(last_guess, current_guess)
+    # posso criar uma string do tamanho da palavra inteira e popular apenas com false
+    # apos isso, itero dentro de cada string e apenas coloco na posicao que contem letras dentro da nova array
+    result_value = Array.new(last_guess.length)
+    last_guess.each_with_index { |guess, index| result_value[index] = guess if guess != false }
+    current_guess.each_with_index { |guess, index| result_value[index] = guess if guess != false }
+    result_value
+  end
 end
 
 # Class to keep and maintain score
@@ -100,29 +109,47 @@ end
 class Hangman
   def initialize
     @word = Comparison.new('')
-    @score = Score.new
     @guess = Comparison.new('')
+    @score = Score.new
   end
 
-  def game_start
+  def play_intro
     puts PlayGame.intro
     @word = @word.words_generator
     puts "#{@word.value} is the word"
     puts Comparison.hide_string(@word)
+  end
+
+  def play_round
+    @guess = @guess.player_input
+    result = @guess.compare_input(@guess.value, @word.value)
+    puts Comparison.p_current_word(result)
+    result
+  end
+
+  def calculate_score(result)
+    if result.any?
+      p 'vida permanece'
+    else
+      @score.wrong_answer
+      p '-1 de vida'
+      p @score.score
+    end
+  end
+
+  def game_start
+    play_intro
+    result = play_round 
+    calculate_score(result)
     loop do
       @guess = @guess.player_input
       result = @guess.compare_input(@guess.value, @word.value)
-      binding.pry
+      new_result = Comparison.concat_word(new_result, result)
       puts Comparison.p_current_word(result)
-      if result.any?
-        p 'vida permanece'
-      else
-        @score.wrong_answer
-        p '-1 de vida'
-        p @score.score
-      end
     end
   end
 end
 
-Hangman.new.game_start
+Hangman.new.game_start 
+
+

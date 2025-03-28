@@ -17,12 +17,9 @@ representado por _. ( )
 8. Desenvolver forma de salvar os chutes do usuario e o impedir de repetir chutes ja usados 
 8. Desenvolver forma de salvar o progresso do jogo.
 
-Onde estamos: 7.
+Mini-rewrite:
 
-7. a) Falta a parte de mostrar a palavra do usuario conforme ele vai adivinhando
-   b) Ao final de mostrar a palavra junto com os _, salvar essa string
-   c) Com a string salva, posso apenas ir iterando enquando adiciono as novas letras salvas
-   d) As comparacoes sempre serao feitas contra a string original
-
-
-
+1. Faca da funcao play_round uma funcao que altere variaveis de classe
+2. O proposito disso e fazer com que esta funcao jogue todos os rounds, nao apenas o round inicial.
+3. Por alterar variavel de classe, podemos fazer o primeiro loop verificando primeiro se a nossa nova variavel de classe que vai ficar com o resultado do play_round, para so entao operarmos os turnos subsequentes que devem ser iguais
+4. Isto e, o primeiro turno e unico, depois disso o loop devera ser o mesmo para todos os loops subsequentes ate o final do jogo.
