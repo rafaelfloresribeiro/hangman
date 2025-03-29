@@ -79,9 +79,7 @@ class Comparison
   end
 
   def self.concat_word(last_guess, current_guess)
-    # posso criar uma string do tamanho da palavra inteira e popular apenas com false
-    # apos isso, itero dentro de cada string e apenas coloco na posicao que contem letras dentro da nova array
-    result_value = Array.new(last_guess.length)
+    result_value = Array.new(last_guess.length, false)
     last_guess.each_with_index { |guess, index| result_value[index] = guess if guess != false }
     current_guess.each_with_index { |guess, index| result_value[index] = guess if guess != false }
     result_value
@@ -111,6 +109,7 @@ class Hangman
     @word = Comparison.new('')
     @guess = Comparison.new('')
     @score = Score.new
+    @iterative_guess = Comparison.new('')
   end
 
   def play_intro
@@ -124,10 +123,19 @@ class Hangman
     @guess = @guess.player_input
     result = @guess.compare_input(@guess.value, @word.value)
     puts Comparison.p_current_word(result)
-    result
+    # segundo loop
+    @iterative_guess = result
+    @guess = @guess.player_input
+    result = @guess.compare_input(@guess.value, @word.value)
+    @iterative_guess = Comparison.concat_word(@iterative_guess, result)
+    puts Comparison.p_current_word(@iterative_guess)
   end
 
-  def calculate_score(result)
+  # por algum motivo ta me irritando que eu to usando @values.values no lugar de so usar as variaveis de classes para alterarem os proprios valores
+  # sem terem de terem de ser redesignadas. Se acalme disso. Se quiser arrumar, arrume depois.
+  # Por agora. O que voce tem que fazer e testar se o concat funciona, e colocar os proximos rounds para funcionar
+
+  def calculate_score
     if result.any?
       p 'vida permanece'
     else
@@ -139,13 +147,11 @@ class Hangman
 
   def game_start
     play_intro
-    result = play_round 
-    calculate_score(result)
+    play_round
+    calculate_score
     loop do
-      @guess = @guess.player_input
-      result = @guess.compare_input(@guess.value, @word.value)
-      new_result = Comparison.concat_word(new_result, result)
-      puts Comparison.p_current_word(result)
+      play_round
+      calculate_score
     end
   end
 end

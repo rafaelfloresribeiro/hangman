@@ -14,12 +14,12 @@ o metodo .sample deve bastar. (X)
 6. Desenvolver uma forma de manter o placar. (X)
 7. Desenvolver a classe responsavel por jogar o jogo, mostrar o progresso do jogo, o local das palavras e o tamanho ( )
 representado por _. ( )
-8. Desenvolver forma de salvar os chutes do usuario e o impedir de repetir chutes ja usados 
-8. Desenvolver forma de salvar o progresso do jogo.
+8. Dividir a operacao do jogo em comandos simples que execute parte dos jogos como funcoes especificas
+9. Desenvolver forma de salvar os chutes do usuario e o impedir de repetir chutes ja usados 
+10. Desenvolver forma de salvar o progresso do jogo.
 
-Mini-rewrite:
 
-1. Faca da funcao play_round uma funcao que altere variaveis de classe
-2. O proposito disso e fazer com que esta funcao jogue todos os rounds, nao apenas o round inicial.
-3. Por alterar variavel de classe, podemos fazer o primeiro loop verificando primeiro se a nossa nova variavel de classe que vai ficar com o resultado do play_round, para so entao operarmos os turnos subsequentes que devem ser iguais
-4. Isto e, o primeiro turno e unico, depois disso o loop devera ser o mesmo para todos os loops subsequentes ate o final do jogo.
+
+8. a) Estou reescrevendo a funcao play_round, quanto a ela, tenho duas ideias do que posso fazer e fico me confundindo sem decidir nenhuma das duas
+   b) A primeira opcao e fazer play_round jogar o primeiro round, alterando apenas variaveis de classe pra nao nao ter que retornar valor nenhum entre nenhuma das funcoes
+   c) A segunda opcao e fazer uma funcao chamada first_round, que joga o round, mostra o placar e no final retorna um valor para ser usado na funcao following_round que vai fazer praticamente a mesma coisa: joga o round, concatena a string do ultimo chute junto desse chute, para ai entao mostrar o placar e **nao retornar valor**
