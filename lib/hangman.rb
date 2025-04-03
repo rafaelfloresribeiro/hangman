@@ -124,11 +124,13 @@ class Hangman
     result = @guess.compare_input(@guess.value, @word.value)
     puts Comparison.p_current_word(result)
     # segundo loop
-    @iterative_guess = result
-    @guess = @guess.player_input
-    result = @guess.compare_input(@guess.value, @word.value)
-    @iterative_guess = Comparison.concat_word(@iterative_guess, result)
-    puts Comparison.p_current_word(@iterative_guess)
+    loop do
+      @iterative_guess = result
+      @guess = @guess.player_input
+      result = @guess.compare_input(@guess.value, @word.value)
+      @iterative_guess = Comparison.concat_word(@iterative_guess, result)
+      puts Comparison.p_current_word(@iterative_guess)
+    end
   end
 
   # por algum motivo ta me irritando que eu to usando @values.values no lugar de so usar as variaveis de classes para alterarem os proprios valores
@@ -148,11 +150,6 @@ class Hangman
   def game_start
     play_intro
     play_round
-    calculate_score
-    loop do
-      play_round
-      calculate_score
-    end
   end
 end
 
