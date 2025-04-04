@@ -123,9 +123,9 @@ class Hangman
     @guess = @guess.player_input
     result = @guess.compare_input(@guess.value, @word.value)
     puts Comparison.p_current_word(result)
+    @iterative_guess = result
     # segundo loop
     loop do
-      @iterative_guess = result
       @guess = @guess.player_input
       result = @guess.compare_input(@guess.value, @word.value)
       @iterative_guess = Comparison.concat_word(@iterative_guess, result)
@@ -153,6 +153,4 @@ class Hangman
   end
 end
 
-Hangman.new.game_start 
-
-
+Hangman.new.game_start
