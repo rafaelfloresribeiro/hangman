@@ -138,8 +138,8 @@ class Hangman
     @guess = @guess.player_input
     result = @guess.compare_input(@guess.value, @word.value)
     if @advance_round == false
-      puts 'advance_round = false'
       puts Comparison.p_current_word(result)
+      @iterative_guess = result
     else
       @iterative_guess = Comparison.concat_word(@iterative_guess, result)
       puts Comparison.p_current_word(@iterative_guess)
