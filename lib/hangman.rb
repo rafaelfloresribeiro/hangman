@@ -112,6 +112,9 @@ end
 class InvalidInputError < StandardError
 end
 
+class GameOver < StandardError
+end
+
 # Class to operate all the game's logic
 class Hangman
   def initialize
@@ -136,33 +139,48 @@ class Hangman
 
   def play_round
     @guess = @guess.player_input
-    result = @guess.compare_input(@guess.value, @word.value)
+    @result = @guess.compare_input(@guess.value, @word.value)
     if @advance_round == false
-      puts Comparison.p_current_word(result)
-      @iterative_guess = result
+      puts Comparison.p_current_word(@result)
+      @iterative_guess = @result
     else
-      @iterative_guess = Comparison.concat_word(@iterative_guess, result)
+      @iterative_guess = Comparison.concat_word(@iterative_guess, @result)
       puts Comparison.p_current_word(@iterative_guess)
     end
   end
 
   def calculate_score
-    if result.any?
+    if @result.any?
       p 'vida permanece'
     else
       @score.wrong_answer
       p '-1 de vida'
       p @score.score
     end
+    end_game unless @score.score.instance_of?(Integer)
+  end
+
+  def end_game
+    puts 'Game over'
+    exit
+  end
+
+  def game_state_evaluator
+    word = @word.value
+    user_guess = @iterative_guess.join
+    end_game if word == user_guess
   end
 
   def game_start
     play_intro
     play_round
+    calculate_score
     toggle_round
-    puts 'round 1 played'
-    play_round
-    puts 'round 2 played'
+    loop do
+      play_round
+      calculate_score
+      game_state_evaluator
+    end
   end
 end
 

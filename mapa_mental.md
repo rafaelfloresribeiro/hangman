@@ -15,13 +15,12 @@ o metodo .sample deve bastar. (X)
 7. Desenvolver a classe responsavel por jogar o jogo, mostrar o progresso do jogo, o local das palavras e o tamanho 
 representado por _. (X)
 8. Dividir a operacao do jogo em comandos simples que execute parte dos jogos como funcoes especificas (X)
-9. Desenvolver calculo e operacao de placar e fim de jogo
+9. Desenvolver calculo e operacao de placar e fim de jogo (X)
 10. Desenvolver forma de salvar os chutes do usuario e o impedir de repetir chutes ja usados ()
 11. Desenvolver forma de salvar o progresso do jogo. ()
 
-a) O jogo precisa agora terminar caso o usuario erre 5x ()
-b) O jogo precisa terminar caso a palavra esteja completa ()
 
-Play_round esta jogando todos os rounds e precisa ser divido. Divida play_round de tal maneira que uma @variavel de classe seja o pre-requisito entre o primeiro loop e todos os loops subsequentes.
-
-Depois, falta implementar o calculo de vida que discutirei a seguir
+a) Agora e a hora de desenvolver uma forma de guardar os chutes()
+b) Uma forma simples que imagino e iniciar mais uma variavel de classe, array, que vai adicionando todos os guesses passados.()
+c) Quando for acerto, nao adiciona no array, quando for erro adiciona no array.()
+d) Voce tambem deve pode alterar a funcao que pede o input para rejeitar caso o input seja repetido ()
