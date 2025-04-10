@@ -16,11 +16,14 @@ o metodo .sample deve bastar. (X)
 representado por _. (X)
 8. Dividir a operacao do jogo em comandos simples que execute parte dos jogos como funcoes especificas (X)
 9. Desenvolver calculo e operacao de placar e fim de jogo (X)
-10. Desenvolver forma de salvar os chutes do usuario e o impedir de repetir chutes ja usados ()
+10. Desenvolver forma de salvar os chutes do usuario (X)
 11. Desenvolver forma de salvar o progresso do jogo. ()
 
 
-a) Agora e a hora de desenvolver uma forma de guardar os chutes()
-b) Uma forma simples que imagino e iniciar mais uma variavel de classe, array, que vai adicionando todos os guesses passados.()
-c) Quando for acerto, nao adiciona no array, quando for erro adiciona no array.()
-d) Voce tambem deve pode alterar a funcao que pede o input para rejeitar caso o input seja repetido ()
+a) Crie uma funcao que serializa todas as variaveis ()
+b) Escreva a serializacao em um arquivo()
+c) Escreva outra funcao para ler essa serializacao e implementar o valor das variaveis()
+d) Escreva outra funcao para lidar com os saves
+e) De opcoes limitadas de saves, para simplicidade pode criar 5 saves e serializa-los todos juntos para dar opcao de ate X saves
+
+Tudo pode ser plain-text. 

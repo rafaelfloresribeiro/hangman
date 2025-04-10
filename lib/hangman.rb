@@ -37,14 +37,6 @@ class Comparison
     @value = value
   end
 
-  def toggle_round
-    @round = true if @round = false 
-  end
-
-  def change_round
-    @round = true
-  end
-
   def words_generator
     dictionary = File.open('../files/google-10000-english-no-swears.txt')
     word_map = dictionary.readlines.map { |word| word.chomp if word.chomp.length >= 4 && word.chomp.length <= 11 }
@@ -124,6 +116,7 @@ class Hangman
     @iterative_guess = Comparison.new('')
     @advance_round = false
     @result = ''
+    @guess_array = []
   end
 
   def toggle_round
@@ -139,6 +132,7 @@ class Hangman
 
   def play_round
     @guess = @guess.player_input
+    @guess_array << @guess.value
     @result = @guess.compare_input(@guess.value, @word.value)
     if @advance_round == false
       puts Comparison.p_current_word(@result)
@@ -150,13 +144,7 @@ class Hangman
   end
 
   def calculate_score
-    if @result.any?
-      p 'vida permanece'
-    else
-      @score.wrong_answer
-      p '-1 de vida'
-      p @score.score
-    end
+    @score.wrong_answer if @result.any? == false
     end_game unless @score.score.instance_of?(Integer)
   end
 
@@ -171,12 +159,17 @@ class Hangman
     end_game if word == user_guess
   end
 
+  def print_guesses
+    puts "Your previous guesses was/were: #{@guess_array}. Current life: #{@score.score}"
+  end
+
   def game_start
     play_intro
     play_round
     calculate_score
     toggle_round
     loop do
+      print_guesses
       play_round
       calculate_score
       game_state_evaluator
