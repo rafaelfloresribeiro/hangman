@@ -37,6 +37,14 @@ class Comparison
     @value = value
   end
 
+  def toggle_round
+    @round = true if @round = false 
+  end
+
+  def change_round
+    @round = true
+  end
+
   def words_generator
     dictionary = File.open('../files/google-10000-english-no-swears.txt')
     word_map = dictionary.readlines.map { |word| word.chomp if word.chomp.length >= 4 && word.chomp.length <= 11 }
@@ -84,6 +92,7 @@ class Comparison
     current_guess.each_with_index { |guess, index| result_value[index] = guess if guess != false }
     result_value
   end
+
 end
 
 # Class to keep and maintain score
@@ -110,6 +119,12 @@ class Hangman
     @guess = Comparison.new('')
     @score = Score.new
     @iterative_guess = Comparison.new('')
+    @advance_round = false
+    @result = ''
+  end
+
+  def toggle_round
+    @advance_round = !@advance_round
   end
 
   def play_intro
@@ -122,20 +137,14 @@ class Hangman
   def play_round
     @guess = @guess.player_input
     result = @guess.compare_input(@guess.value, @word.value)
-    puts Comparison.p_current_word(result)
-    @iterative_guess = result
-    # segundo loop
-    loop do
-      @guess = @guess.player_input
-      result = @guess.compare_input(@guess.value, @word.value)
+    if @advance_round == false
+      puts 'advance_round = false'
+      puts Comparison.p_current_word(result)
+    else
       @iterative_guess = Comparison.concat_word(@iterative_guess, result)
       puts Comparison.p_current_word(@iterative_guess)
     end
   end
-
-  # por algum motivo ta me irritando que eu to usando @values.values no lugar de so usar as variaveis de classes para alterarem os proprios valores
-  # sem terem de terem de ser redesignadas. Se acalme disso. Se quiser arrumar, arrume depois.
-  # Por agora. O que voce tem que fazer e testar se o concat funciona, e colocar os proximos rounds para funcionar
 
   def calculate_score
     if result.any?
@@ -150,6 +159,10 @@ class Hangman
   def game_start
     play_intro
     play_round
+    toggle_round
+    puts 'round 1 played'
+    play_round
+    puts 'round 2 played'
   end
 end
 
