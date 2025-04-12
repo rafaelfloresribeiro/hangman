@@ -1,5 +1,6 @@
 require 'csv'
 require 'pry-byebug'
+require 'yaml'
 # Dictionary to gather all the words
 class Dictionary
 end
@@ -35,6 +36,16 @@ class Comparison
 
   def initialize(value)
     @value = value
+  end
+
+  def serialize
+    {
+      'value' => @value
+    }
+  end
+
+  def self.deserialize(object)
+    new(object['value'])
   end
 
   def words_generator
@@ -93,6 +104,18 @@ class Score
 
   def initialize
     @score = 5
+  end
+
+  def serialize
+    {
+      'score' => @score
+    }
+  end
+
+  def self.deserialize(object)
+    new_score = new
+    new_score.score = object['score']
+    new_score
   end
 
   def wrong_answer
@@ -163,6 +186,36 @@ class Hangman
     puts "Your previous guesses was/were: #{@guess_array}. Current life: #{@score.score}"
   end
 
+  def save_game
+    {
+      'g' => @guess.serialize,
+      'sore' => @score.serialize,
+      'word' => @word.serialize,
+      'current_guess' => @iterative_guess,
+      'advance_round' => @advance_round,
+      'result' => @result,
+      'guess_array' => @guess_array
+    }
+  end
+
+  def self.load_game(load_file)
+    @guess = load_file['guess'].deserialize
+    @word = load_file['word']
+    @score = load_file['score'].deserialize
+    @iterative_guess = load_file['iterative_guess']
+    @advance_round = load_file['advance_round']
+    @result = load_file['result']
+    @guess_array = load_file['guess_array']
+  end
+
+  # @word = Comparison.new('')
+  # @guess = Comparison.new('')
+  # @score = Score.new
+  # @iterative_guess = Comparison.new('')
+  # @advance_round = false
+  # @result = ''
+  # @guess_array = []
+
   def game_start
     play_intro
     play_round
@@ -173,6 +226,7 @@ class Hangman
       play_round
       calculate_score
       game_state_evaluator
+      binding.pry
     end
   end
 end
