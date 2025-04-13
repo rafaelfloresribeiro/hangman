@@ -32,12 +32,6 @@ end
 
 # class to handle all comparisons
 class Comparison
-  attr_accessor :value
-
-  def initialize(value)
-    @value = value
-  end
-
   def serialize
     {
       'value' => @value
@@ -51,33 +45,33 @@ class Comparison
   def words_generator
     dictionary = File.open('../files/google-10000-english-no-swears.txt')
     word_map = dictionary.readlines.map { |word| word.chomp if word.chomp.length >= 4 && word.chomp.length <= 11 }
-    Comparison.new(word_map.compact.sample)
+    word_map.compact.sample
   end
 
   def self.hide_string(string)
-    string.value.chars.map { '_ ' }.join
+    string.chars.map { '_ ' }.join
   end
 
-  def ask_input
+  def self.ask_input
     'type a character'
   end
 
-  def player_input
+  def self.player_input
     loop do
       puts ask_input
       answer = gets.chomp
       valid_input?(answer)
-      break Comparison.new(answer)
+      break answer
     rescue InvalidInputError
       puts 'Invalid input, try again.'
     end
   end
 
-  def valid_input?(input)
+  def self.valid_input?(input)
     raise InvalidInputError unless input.match?(/[a-zA-Z]/) && input.length == 1
   end
 
-  def compare_input(letter, word)
+  def self.compare_input(letter, word)
     word.chars.map { |game_word| game_word == letter ? letter : false }
   end
 
@@ -95,27 +89,14 @@ class Comparison
     current_guess.each_with_index { |guess, index| result_value[index] = guess if guess != false }
     result_value
   end
-
 end
 
 # Class to keep and maintain score
 class Score
   attr_accessor :score
 
-  def initialize
-    @score = 5
-  end
-
-  def serialize
-    {
-      'score' => @score
-    }
-  end
-
-  def self.deserialize(object)
-    new_score = new
-    new_score.score = object['score']
-    new_score
+  def initialize(score = 5)
+    @score = score
   end
 
   def wrong_answer
@@ -133,12 +114,12 @@ end
 # Class to operate all the game's logic
 class Hangman
   def initialize
-    @word = Comparison.new('')
-    @guess = Comparison.new('')
+    @word = Comparison.new
+    @guess = nil
     @score = Score.new
-    @iterative_guess = Comparison.new('')
+    @iterative_guess = nil
     @advance_round = false
-    @result = ''
+    @result = nil
     @guess_array = []
   end
 
@@ -149,14 +130,14 @@ class Hangman
   def play_intro
     puts PlayGame.intro
     @word = @word.words_generator
-    puts "#{@word.value} is the word"
+    puts "#{@word} is the word"
     puts Comparison.hide_string(@word)
   end
 
   def play_round
-    @guess = @guess.player_input
-    @guess_array << @guess.value
-    @result = @guess.compare_input(@guess.value, @word.value)
+    @guess = Comparison.player_input
+    @guess_array << @guess
+    @result = Comparison.compare_input(@guess, @word)
     if @advance_round == false
       puts Comparison.p_current_word(@result)
       @iterative_guess = @result
@@ -177,7 +158,7 @@ class Hangman
   end
 
   def game_state_evaluator
-    word = @word.value
+    word = @word
     user_guess = @iterative_guess.join
     end_game if word == user_guess
   end
@@ -187,34 +168,29 @@ class Hangman
   end
 
   def save_game
-    {
-      'g' => @guess.serialize,
-      'sore' => @score.serialize,
-      'word' => @word.serialize,
+    user_save = {
+      'guess' => @guess,
+      'score' => @score,
+      'word' => @word,
       'current_guess' => @iterative_guess,
       'advance_round' => @advance_round,
       'result' => @result,
       'guess_array' => @guess_array
     }
+    File.write('user_save.yaml', user_save.to_yaml)
   end
 
-  def self.load_game(load_file)
-    @guess = load_file['guess'].deserialize
+  def self.load_game
+    load_file = File.read('user_save.yaml')
+    load_file = YAML.safe_load(load_file, permitted_classes: [Score])
+    @guess = load_file['guess']
     @word = load_file['word']
-    @score = load_file['score'].deserialize
+    @score = load_file['score'].score
     @iterative_guess = load_file['iterative_guess']
     @advance_round = load_file['advance_round']
     @result = load_file['result']
     @guess_array = load_file['guess_array']
   end
-
-  # @word = Comparison.new('')
-  # @guess = Comparison.new('')
-  # @score = Score.new
-  # @iterative_guess = Comparison.new('')
-  # @advance_round = false
-  # @result = ''
-  # @guess_array = []
 
   def game_start
     play_intro
@@ -227,6 +203,7 @@ class Hangman
       calculate_score
       game_state_evaluator
       binding.pry
+      Hangman.load_game
     end
   end
 end
