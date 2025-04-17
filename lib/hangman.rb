@@ -120,6 +120,7 @@ end
 
 # Class to operate all the game's logic
 class Hangman
+  attr_writer :word, :score, :iterative_guess, :advance_round, :result, :guess_array
   def initialize
     self.class.instance_variable_set(:@current_self, self)
     @current_self = self
@@ -132,6 +133,7 @@ class Hangman
     @guess_array = []
   end
 
+    # eu quero um setter method para poder diretamente atribuir o valor das variaveis para
   def self.current_self
     @current_self
   end
@@ -194,10 +196,21 @@ class Hangman
   end
 
   def self.load_game
+    puts 'Type the name of your save file (without .yaml)'
+    file_name = gets.chomp
+    file = YAML.safe_load_file("#{file_name}.yaml", permitted_classes: [Score])
+    @guess = file['guess']
+    @score = file['score']
+    @word = file['word']
+    @current_guess = file['current_guess']
+    @advance_round = file['advance_round']
+    @guess_aray = file['guess_array']
+    binding.pry
+    @current_self.loaded_start
   end
 
-  def self.permitted_classes
-    [Score, Symbol]
+  def self.call_game_start
+    self.game_start
   end
 
   def start_menu
@@ -223,9 +236,19 @@ class Hangman
       play_round
       calculate_score
       game_state_evaluator
-      # binding.pry
+    end
+  end
+
+  def self.loaded_start
+    loop do
+      print_guesses
+      play_round
+      calculate_score
+      game_state_evaluator
     end
   end
 end
+
+  
 
 Hangman.new.start_menu
