@@ -20,16 +20,9 @@ representado por _. (X)
 11. Desenvolver forma de salvar o progresso do jogo. ()
 
 
-a) Crie uma funcao que serializa todas as variaveis ()
-b) Escreva a serializacao em um arquivo()
+a) Crie uma funcao que serializa todas as variaveis (X)
+b) Escreva a serializacao em um arquivo(X)
 c) Escreva outra funcao para ler essa serializacao e implementar o valor das variaveis()
 d) Escreva outra funcao para lidar com os saves
 e) De opcoes limitadas de saves, para simplicidade pode criar 5 saves e serializa-los todos juntos para dar opcao de ate X saves
 
-Para o processo de serializacao, vamos ter de re-estudar os propositos de nossas classes e redesignar conforme necessario.
-
-A principio, a classe Comparison esta atuando com dois tipos diferentes de data types, o que dificulta na serializacao. Seu objetivo agora e
-
-1- Analise o codigo, analise a utilizacao de classes. A classe Comparison precisa ser inicializada com ''? Nao pode ter valor padrao?
-2- Por que duas variaveis Comparisons sao inicializadas, mas depois uma delas se transforma em string normal? Sera necessario?
-3- Pesquisando sobre boas-praticas, o proximo passo antes de poder completar esse projeto vai ser a re-examinacao do codigo para manter (ou nao) a integridade das classes que voce criou.

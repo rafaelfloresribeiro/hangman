@@ -53,18 +53,25 @@ class Comparison
   end
 
   def self.ask_input
-    'type a character'
+    'type a character, or type 1 to save your game'
   end
 
   def self.player_input
     loop do
       puts ask_input
       answer = gets.chomp
+      new.call_save if answer == '1'
       valid_input?(answer)
       break answer
     rescue InvalidInputError
       puts 'Invalid input, try again.'
     end
+  end
+
+  def call_save
+    puts 'write a name for your file'
+    name = gets.chomp
+    Hangman.current_self.save_game(name)
   end
 
   def self.valid_input?(input)
@@ -114,6 +121,8 @@ end
 # Class to operate all the game's logic
 class Hangman
   def initialize
+    self.class.instance_variable_set(:@current_self, self)
+    @current_self = self
     @word = Comparison.new
     @guess = nil
     @score = Score.new
@@ -123,8 +132,12 @@ class Hangman
     @guess_array = []
   end
 
+  def self.current_self
+    @current_self
+  end
+
   def toggle_round
-    @advance_round = !@advance_round
+    @advance_round = true
   end
 
   def play_intro
@@ -167,7 +180,7 @@ class Hangman
     puts "Your previous guesses was/were: #{@guess_array}. Current life: #{@score.score}"
   end
 
-  def save_game
+  def save_game(name = 'user_save')
     user_save = {
       'guess' => @guess,
       'score' => @score,
@@ -177,19 +190,27 @@ class Hangman
       'result' => @result,
       'guess_array' => @guess_array
     }
-    File.write('user_save.yaml', user_save.to_yaml)
+    File.write("#{name}.yaml", user_save.to_yaml)
   end
 
   def self.load_game
-    load_file = File.read('user_save.yaml')
-    load_file = YAML.safe_load(load_file, permitted_classes: [Score])
-    @guess = load_file['guess']
-    @word = load_file['word']
-    @score = load_file['score'].score
-    @iterative_guess = load_file['iterative_guess']
-    @advance_round = load_file['advance_round']
-    @result = load_file['result']
-    @guess_array = load_file['guess_array']
+  end
+
+  def self.permitted_classes
+    [Score, Symbol]
+  end
+
+  def start_menu
+    puts 'Type 1 to play a new game'
+    puts 'type 2 to load a game'
+    choice = gets.chomp
+    case choice
+    when '1' then Hangman.new.game_start
+    when '2' then Hangman.load_game
+    else
+      puts 'Invalid choice'
+      start_menu
+    end
   end
 
   def game_start
@@ -202,10 +223,9 @@ class Hangman
       play_round
       calculate_score
       game_state_evaluator
-      binding.pry
-      Hangman.load_game
+      # binding.pry
     end
   end
 end
 
-Hangman.new.game_start
+Hangman.new.start_menu
