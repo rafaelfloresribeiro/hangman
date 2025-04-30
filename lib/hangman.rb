@@ -195,7 +195,7 @@ class Hangman
     File.write("#{name}.yaml", user_save.to_yaml)
   end
 
-  def self.load_game
+  def load_game
     puts 'Type the name of your save file (without .yaml)'
     file_name = gets.chomp
     file = YAML.safe_load_file("#{file_name}.yaml", permitted_classes: [Score])
@@ -205,8 +205,8 @@ class Hangman
     @current_guess = file['current_guess']
     @advance_round = file['advance_round']
     @guess_aray = file['guess_array']
-    binding.pry
     @current_self.loaded_start
+    loaded_start
   end
 
   def self.call_game_start
@@ -218,8 +218,8 @@ class Hangman
     puts 'type 2 to load a game'
     choice = gets.chomp
     case choice
-    when '1' then Hangman.new.game_start
-    when '2' then Hangman.load_game
+    when '1' then game_start
+    when '2' then load_game
     else
       puts 'Invalid choice'
       start_menu
@@ -239,7 +239,7 @@ class Hangman
     end
   end
 
-  def self.loaded_start
+  def loaded_start
     loop do
       print_guesses
       play_round
