@@ -121,13 +121,14 @@ end
 # Class to operate all the game's logic
 class Hangman
   attr_writer :word, :score, :iterative_guess, :advance_round, :result, :guess_array
+
   def initialize
     self.class.instance_variable_set(:@current_self, self)
     @current_self = self
     @word = Comparison.new
     @guess = nil
     @score = Score.new
-    @iterative_guess = nil
+    @iterative_guess = []
     @advance_round = false
     @result = nil
     @guess_array = []
@@ -202,15 +203,10 @@ class Hangman
     @guess = file['guess']
     @score = file['score']
     @word = file['word']
-    @current_guess = file['current_guess']
+    @iterative_guess = file['current_guess']
     @advance_round = file['advance_round']
-    @guess_aray = file['guess_array']
-    @current_self.loaded_start
+    @guess_array = file['guess_array']
     loaded_start
-  end
-
-  def self.call_game_start
-    self.game_start
   end
 
   def start_menu
