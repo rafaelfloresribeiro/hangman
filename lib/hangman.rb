@@ -1,5 +1,3 @@
-require 'csv'
-require 'pry-byebug'
 require 'yaml'
 # Dictionary to gather all the words
 class Dictionary
@@ -11,15 +9,12 @@ module Presentation
     Welcome to the classic game of hangman
     this game will take a word with between 5 and 12
     characters, and you'll have to guess!
-    you have 5 lives, that will be presented to you
+    You have 5 lives, that will be presented to you
     with your past guesses and correct guesses
     Example:
-    \n
-    e _ _ _ e - 3 guesses left - past guesses: I, U
-    \n
-    the word was E A G L E
-    \n
-    you must type character by character
+    e _ _ _ e
+    Your previous guesses was/were: ["E", "I", "U"] Current life: 3
+    This is the game format. You'll see the game word at Game Over
   TEXT
 end
 
@@ -43,7 +38,8 @@ class Comparison
   end
 
   def words_generator
-    dictionary = File.open('../files/google-10000-english-no-swears.txt')
+    dictionary_path = File.join(__dir__, '..', 'files', 'google-10000-english-no-swears.txt')
+    dictionary = File.open(dictionary_path)
     word_map = dictionary.readlines.map { |word| word.chomp if word.chomp.length >= 4 && word.chomp.length <= 11 }
     word_map.compact.sample
   end
@@ -72,6 +68,7 @@ class Comparison
     puts 'write a name for your file'
     name = gets.chomp
     Hangman.current_self.save_game(name)
+    exit
   end
 
   def self.valid_input?(input)
@@ -146,7 +143,7 @@ class Hangman
   def play_intro
     puts PlayGame.intro
     @word = @word.words_generator
-    puts "#{@word} is the word"
+    # puts "#{@word} is the word" - Line can be used to see what the word is while playing
     puts Comparison.hide_string(@word)
   end
 
@@ -169,6 +166,7 @@ class Hangman
   end
 
   def end_game
+    puts "The word was #{@word}"
     puts 'Game over'
     exit
   end
@@ -193,13 +191,19 @@ class Hangman
       'result' => @result,
       'guess_array' => @guess_array
     }
-    File.write("#{name}.yaml", user_save.to_yaml)
+    File.write(save_file_path(name), user_save.to_yaml)
+  end
+
+  def save_file_path(file_name)
+    save_dir = File.join(__dir__, 'saves')
+    Dir.mkdir(save_dir) unless Dir.exist?(save_dir)
+    File.join(save_dir, "#{file_name}.yaml")
   end
 
   def load_game
     puts 'Type the name of your save file (without .yaml)'
     file_name = gets.chomp
-    file = YAML.safe_load_file("#{file_name}.yaml", permitted_classes: [Score])
+    file = YAML.safe_load_file(save_file_path(file_name), permitted_classes: [Score])
     @guess = file['guess']
     @score = file['score']
     @word = file['word']
@@ -244,7 +248,5 @@ class Hangman
     end
   end
 end
-
-  
 
 Hangman.new.start_menu
